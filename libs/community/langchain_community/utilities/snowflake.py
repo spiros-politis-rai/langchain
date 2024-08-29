@@ -31,9 +31,27 @@ class SnowflakeConnector(ABC):
         self._session = None
         super().__init__()
     
-    def set_snowflake_logger_params(self, level: int, handler: logging.Handler = None, 
-        formatter: logging.Formatter = None):
+    def set_snowflake_logger_params(self, level: int, handler: logging.Handler, 
+        formatter: logging.Formatter
+    ) -> None:
         """Set the logger level for the Snowflake logger.
+
+        Examples:
+
+        .. code-block:: python
+
+            self.set_snowflake_logger_params(
+                level=logging.INFO, 
+                handler=logging.StreamHandler(), 
+                formatter=logging.Formatter(
+                    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+                )
+            )
+
+        Args:
+            level (int): The logging level.
+            handler: The logging handler.
+            formatter: The logging formatter.
         """
         for logger_name in ("snowflake.snowpark", "snowflake.connector"):
             logger = logging.getLogger(logger_name)
@@ -80,11 +98,25 @@ class SnowflakeConnectorBasic(SnowflakeConnector):
         self, account: str, role: str, user: str, password: SecretStr, database: str, 
         schema: str, warehouse: str
     ):
+        """Initialize Snowflake connector.
+
+        Args:
+            account (str): Snowflake account.
+            role (str): Snowflake role.
+            user (str): Snowflake user.
+            password (SecretStr): Snowflake password.
+            database (str): Snowflake database.
+            schema (str): Snowflake schema.
+            warehouse (str): Snowflake warehouse.
+        """
         super().__init__(account, role, user, database, schema, warehouse)
         self._password = password
 
     def connect(self) -> Session:
-        """Connect to Snowflake.
+        """Connect to Snowflake and get a Session object.
+
+        Returns:
+            Session: Snowflake session.
         """
         logger.debug(f"Using {__class__}")
         connection_params = {
