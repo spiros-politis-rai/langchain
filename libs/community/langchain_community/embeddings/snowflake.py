@@ -6,7 +6,6 @@ from langchain_core.pydantic_v1 import BaseModel
 
 try:
     from snowflake.snowpark import Session
-    from snowflake.snowpark.exceptions import SnowparkSessionException
 except ImportError:
     raise ImportError(
         "`snowflake-snowpark-python` package not found, please install it with "
@@ -16,6 +15,7 @@ except ImportError:
 from langchain_community.utilities.snowflake import SnowflakeConnector
 
 logger = logging.getLogger(__name__)
+
 
 class SnowflakeEmbeddings(BaseModel, Embeddings):
     """Snowflake embeddings.
@@ -44,7 +44,7 @@ class SnowflakeEmbeddings(BaseModel, Embeddings):
     This must be set after instantiation of the SnowflakeEmbeddings class.
     """
     connector: SnowflakeConnector = None
-    
+
     """The Snowflake session instance from the connector class."""
     session: Session = None
 
@@ -58,13 +58,14 @@ class SnowflakeEmbeddings(BaseModel, Embeddings):
 
     class Config:
         """Configuration for this pydantic object."""
+
         arbitrary_types_allowed = True
         fields = {
-            "connector": "connector", 
-            "session": "session", 
-            "model": "model", 
-            "embeddings_dim": "embeddings_dim", 
-            "show_progress": "show_progress"
+            "connector": "connector",
+            "session": "session",
+            "model": "model",
+            "embeddings_dim": "embeddings_dim",
+            "show_progress": "show_progress",
         }
 
     def _get_session(self):
@@ -75,17 +76,17 @@ class SnowflakeEmbeddings(BaseModel, Embeddings):
             logger.error("Error connecting to Snowflake")
             logger.error(error)
             raise error
-        
+
     @property
     def _identifying_params(self) -> Mapping[str, Any]:
         """Get the identifying parameters."""
         return {
             **{
-                "model": self.model, 
-                "connector": self.connector, 
-                "session": self.session, 
-                "embeddings_dim": self.embeddings_dim, 
-                "show_progress": self.show_progress
+                "model": self.model,
+                "connector": self.connector,
+                "session": self.session,
+                "embeddings_dim": self.embeddings_dim,
+                "show_progress": self.show_progress,
             },
             **self._default_params,
         }
@@ -102,13 +103,18 @@ class SnowflakeEmbeddings(BaseModel, Embeddings):
 
         # Basic safeguards against model / dim mismatch.
         if self.model in ["e5-base-v2"] and self.embeddings_dim != 768:
-            raise ValueError("Only e5-base-v2 model is supported for 768-dim embeddings")
+            raise ValueError(
+                "Only e5-base-v2 model is supported for 768-dim embeddings"
+            )
         elif self.model in ["nv-embed-qa-4"] and self.embeddings_dim != 1024:
-            raise ValueError("Only nv-embed-qa-4 model is supported for 1024-dim embeddings")
+            raise ValueError(
+                "Only nv-embed-qa-4 model is supported for 1024-dim embeddings"
+            )
 
         escaped_input = input.replace("'", "\\'")
         query = f"""
-            SELECT SNOWFLAKE.CORTEX.EMBED_TEXT_{self.embeddings_dim}('{self.model}', '{escaped_input}') 
+            SELECT SNOWFLAKE.CORTEX.EMBED_TEXT_{self.embeddings_dim}
+            ('{self.model}', '{escaped_input}') 
             AS embeddings
         """
         result = None
