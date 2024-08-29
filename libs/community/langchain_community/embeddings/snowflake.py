@@ -36,7 +36,6 @@ class SnowflakeEmbeddings(BaseModel, Embeddings):
             e_2 = snowflake_embeddings.embed_query(
                 "What is the second letter of Greek alphabet"
             )
-
     """
 
     """Snowflake connector class to use.
@@ -45,12 +44,20 @@ class SnowflakeEmbeddings(BaseModel, Embeddings):
     """
     connector: SnowflakeConnector = None
 
-    """Snowflake embeddings model to use."""
+    """Snowflake embeddings model to use.
+    
+    Currently, available Snowflake embeddings models are the following:
+        - `e5-base-v2`: produces 768-dimensional embeddings
+        - `nv-embed-qa-4`: produces 1024-dimensional embeddings
+
+    Default is `e5-base-v2`.
+    """
     model: str = "e5-base-v2"
 
     """Show progress bar. Requires ``tqdm`` to be installed."""
     show_progress: bool = False
 
+    """Embeddings dimensionality."""
     embeddings_dim: int = 768
 
     class Config:
@@ -65,6 +72,11 @@ class SnowflakeEmbeddings(BaseModel, Embeddings):
         }
 
     def _get_session(self) -> Session:
+        """Get a Snowflake session.
+
+        Returns:
+            A Snoflake Session object.
+        """
         try:
             return self.connector.connect()
         except Exception as error:
@@ -86,15 +98,14 @@ class SnowflakeEmbeddings(BaseModel, Embeddings):
         }
 
     def _get_snowflake_embeddings(self, input: str) -> List[float]:
-        """Process response from Snowflake.
+        """Call the Snowflake SQL API to retrieve embeddings.
 
         Args:
-            response: The response from Snowflake.
+            input: The string for which to retrieve embeddings from Snowflake.
 
         Returns:
-            The response as a dictionary.
+            A list of floats representing the embeddings.
         """
-
         # Basic safeguards against model / dim mismatch.
         if self.model in ["e5-base-v2"] and self.embeddings_dim != 768:
             raise ValueError(
@@ -138,13 +149,23 @@ class SnowflakeEmbeddings(BaseModel, Embeddings):
         return [self._get_snowflake_embeddings(item) for item in iter_]
 
     def embed_documents(self, input: List[str]) -> List[List[float]]:
-        """Embed documents using Snowflake's embedding model.
+        """Produce embeddings for a list of strings, using Snowflake's embedding model.
+
+        Example:
+            .. code-block:: python
+
+                embeddings = snowflake_embeddings.embed_documents(
+                    [
+                        "Alpha is the first letter of Greek alphabet",
+                        "Beta is the second letter of Greek alphabet"
+                    ]
+                )
 
         Args:
-            texts: The list of texts to embed.
+            input: The list of texts to retrieve embeddings for.
 
         Returns:
-            List of embeddings, one for each text.
+            List of lists of float embeddings, one for each text.
         """
         try:
             items = [item for item in input]
@@ -155,7 +176,14 @@ class SnowflakeEmbeddings(BaseModel, Embeddings):
             raise error
 
     def embed_query(self, input: str) -> List[float]:
-        """Produce text embeddings using a Snowflake embeddings model.
+        """Produce embeddings for a string, using Snowflake's embedding model.
+
+        Example:
+            .. code-block:: python
+
+                embeddings = snowflake_embeddings.embed_query(
+                    "Alpha is the first letter of Greek alphabet"
+                )
 
         Args:
             input: the text to embed.

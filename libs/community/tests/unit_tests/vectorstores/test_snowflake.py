@@ -189,11 +189,11 @@ def test_similarity_search(snowflake_vector_store: SnowflakeVectorStore) -> None
 
 @pytest.mark.requires("snowflake-snowpark-python")
 @pytest.mark.enable_socket
-def test_similarity_search_with_scores(
+def test_similarity_search_with_score(
     snowflake_vector_store: SnowflakeVectorStore,
 ) -> None:
     """Test performing similarity search with score with the Snowflake vector store."""
-    result = snowflake_vector_store.similarity_search_with_scores(
+    result = snowflake_vector_store.similarity_search_with_score(
         query="Test text 1", top_k=3
     )
 

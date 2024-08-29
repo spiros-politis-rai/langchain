@@ -128,13 +128,13 @@ class SnowflakeConnectorBasic(SnowflakeConnector):
         """Initialize Snowflake connector.
 
         Args:
-            account (str): Snowflake account.
-            role (str): Snowflake role.
-            user (str): Snowflake user.
-            password (SecretStr): Snowflake password.
-            database (str): Snowflake database.
-            schema (str): Snowflake schema.
-            warehouse (str): Snowflake warehouse.
+            account: Snowflake account.
+            role: Snowflake role.
+            user: Snowflake user.
+            password: Snowflake password.
+            database: Snowflake database.
+            schema: Snowflake schema.
+            warehouse: Snowflake warehouse.
         """
         super().__init__(account, role, user, database, schema, warehouse)
         self._password = password
