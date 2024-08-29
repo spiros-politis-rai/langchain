@@ -58,7 +58,7 @@ def snowflake_embeddings_1024(snowflake_connector_basic: SnowflakeConnectorBasic
     yield embeddings
 
 
-# TODO: @pytest.mark.requires("snowflake-snowpark-python")
+@pytest.mark.requires("snowflake-snowpark-python")
 @pytest.mark.enable_socket
 def test_snowflake_embed_query_768(
     snowflake_embeddings_768: SnowflakeEmbeddings,
@@ -68,7 +68,7 @@ def test_snowflake_embed_query_768(
     assert result is not None and len(result) == snowflake_embeddings_768.embeddings_dim
 
 
-# TODO: @pytest.mark.requires("snowflake-snowpark-python")
+@pytest.mark.requires("snowflake-snowpark-python")
 @pytest.mark.enable_socket
 def test_snowflake_embed_documents_768(
     snowflake_embeddings_768: SnowflakeEmbeddings,
@@ -82,7 +82,7 @@ def test_snowflake_embed_documents_768(
     )
 
 
-# TODO: @pytest.mark.requires("snowflake-snowpark-python")
+@pytest.mark.requires("snowflake-snowpark-python")
 @pytest.mark.enable_socket
 def test_snowflake_embed_query_1024(
     snowflake_embeddings_1024: SnowflakeEmbeddings,
@@ -94,7 +94,7 @@ def test_snowflake_embed_query_1024(
     )
 
 
-# TODO: @pytest.mark.requires("snowflake-snowpark-python")
+@pytest.mark.requires("snowflake-snowpark-python")
 @pytest.mark.enable_socket
 def test_snowflake_embed_documents_1024(
     snowflake_embeddings_1024: SnowflakeEmbeddings,

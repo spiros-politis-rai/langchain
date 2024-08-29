@@ -58,13 +58,13 @@ class SnowflakeEmbeddings(BaseModel, Embeddings):
 
         arbitrary_types_allowed = True
         fields = {
-            "connector": "connector", 
-            "model": "model", 
-            "embeddings_dim": "embeddings_dim", 
-            "show_progress": "show_progress"
+            "connector": "connector",
+            "model": "model",
+            "embeddings_dim": "embeddings_dim",
+            "show_progress": "show_progress",
         }
 
-    def _get_session(self):
+    def _get_session(self) -> Session:
         try:
             return self.connector.connect()
         except Exception as error:
@@ -77,10 +77,10 @@ class SnowflakeEmbeddings(BaseModel, Embeddings):
         """Get the identifying parameters."""
         return {
             **{
-                "model": self.model, 
-                "connector": self.connector, 
-                "embeddings_dim": self.embeddings_dim, 
-                "show_progress": self.show_progress
+                "model": self.model,
+                "connector": self.connector,
+                "embeddings_dim": self.embeddings_dim,
+                "show_progress": self.show_progress,
             },
             **self._default_params,
         }

@@ -79,7 +79,7 @@ def prepare_database(snowflake_connector_basic: SnowflakeConnectorBasic):
         """)
 
 
-# TODO: @pytest.mark.requires("snowflake-snowpark-python")
+@pytest.mark.requires("snowflake-snowpark-python")
 @pytest.mark.enable_socket
 def test_as_retriever(snowflake_vector_store: SnowflakeVectorStore) -> None:
     """Test converting Snowflake vector store to retriever."""
@@ -91,7 +91,7 @@ def test_as_retriever(snowflake_vector_store: SnowflakeVectorStore) -> None:
     )
 
 
-# TODO: @pytest.mark.requires("snowflake-snowpark-python")
+@pytest.mark.requires("snowflake-snowpark-python")
 @pytest.mark.enable_socket
 def test_add_texts_insert(snowflake_vector_store: SnowflakeVectorStore) -> None:
     """Test adding text items to Snowflake vector store."""
@@ -107,7 +107,7 @@ def test_add_texts_insert(snowflake_vector_store: SnowflakeVectorStore) -> None:
     assert len(result) == INSERTED_ITEMS_LENGTH
 
 
-# TODO: @pytest.mark.requires("snowflake-snowpark-python")
+@pytest.mark.requires("snowflake-snowpark-python")
 @pytest.mark.enable_socket
 def test_add_texts_insert_or_update(
     snowflake_vector_store: SnowflakeVectorStore,
@@ -129,7 +129,7 @@ def test_add_texts_insert_or_update(
     assert len(result) == 1
 
 
-# TODO: @pytest.mark.requires("snowflake-snowpark-python")
+@pytest.mark.requires("snowflake-snowpark-python")
 @pytest.mark.enable_socket
 def test_add_documents_insert(snowflake_vector_store: SnowflakeVectorStore) -> None:
     """Test adding document items to Snowflake vector store."""
@@ -147,7 +147,7 @@ def test_add_documents_insert(snowflake_vector_store: SnowflakeVectorStore) -> N
     assert len(result) == INSERTED_ITEMS_LENGTH
 
 
-# TODO: @pytest.mark.requires("snowflake-snowpark-python")
+@pytest.mark.requires("snowflake-snowpark-python")
 @pytest.mark.enable_socket
 def test_search_with_similarity_method(
     snowflake_vector_store: SnowflakeVectorStore,
@@ -161,7 +161,7 @@ def test_search_with_similarity_method(
     assert len(result) == 3 and result[0].dict()["page_content"] == "Test text 1"
 
 
-# TODO: @pytest.mark.requires("snowflake-snowpark-python")
+@pytest.mark.requires("snowflake-snowpark-python")
 @pytest.mark.enable_socket
 def test_search_with_similarity_score_threshold_method(
     snowflake_vector_store: SnowflakeVectorStore,
@@ -177,7 +177,7 @@ def test_search_with_similarity_score_threshold_method(
     assert len(result) == 1 and result[0][0].dict()["page_content"] == "Test text 1"
 
 
-# TODO: @pytest.mark.requires("snowflake-snowpark-python")
+@pytest.mark.requires("snowflake-snowpark-python")
 @pytest.mark.enable_socket
 def test_similarity_search(snowflake_vector_store: SnowflakeVectorStore) -> None:
     """Test performing similarity search with the Snowflake vector store."""
@@ -187,7 +187,7 @@ def test_similarity_search(snowflake_vector_store: SnowflakeVectorStore) -> None
     assert result[0].dict()["page_content"] == "Test text 1"
 
 
-# TODO: @pytest.mark.requires("snowflake-snowpark-python")
+@pytest.mark.requires("snowflake-snowpark-python")
 @pytest.mark.enable_socket
 def test_similarity_search_with_scores(
     snowflake_vector_store: SnowflakeVectorStore,
@@ -202,7 +202,7 @@ def test_similarity_search_with_scores(
     assert result[0][0].dict()["page_content"] == "Test text 1" and result[0][1] == 1.0
 
 
-# TODO: @pytest.mark.requires("snowflake-snowpark-python")
+@pytest.mark.requires("snowflake-snowpark-python")
 @pytest.mark.enable_socket
 def test_similarity_search_by_vector(
     snowflake_vector_store: SnowflakeVectorStore,
@@ -221,7 +221,7 @@ def test_similarity_search_by_vector(
     assert result[0].dict()["page_content"] == "Test text 1"
 
 
-# TODO: @pytest.mark.requires("snowflake-snowpark-python")
+@pytest.mark.requires("snowflake-snowpark-python")
 @pytest.mark.enable_socket
 def test_similarity_search_with_relevance_scores(
     snowflake_vector_store: SnowflakeVectorStore,
@@ -236,7 +236,7 @@ def test_similarity_search_with_relevance_scores(
     assert result[0][0].dict()["page_content"] == "Test text 1" and result[0][1] == 1.0
 
 
-# TODO: @pytest.mark.requires("snowflake-snowpark-python")
+@pytest.mark.requires("snowflake-snowpark-python")
 @pytest.mark.enable_socket
 def test_delete(snowflake_vector_store: SnowflakeVectorStore) -> None:
     """Test deleting text items from the Snowflake vector store."""
@@ -246,7 +246,7 @@ def test_delete(snowflake_vector_store: SnowflakeVectorStore) -> None:
     assert True if result else False
 
 
-# TODO: @pytest.mark.requires("snowflake-snowpark-python")
+@pytest.mark.requires("snowflake-snowpark-python")
 @pytest.mark.enable_socket
 def test_from_texts(
     snowflake_connector_basic: SnowflakeConnectorBasic,
