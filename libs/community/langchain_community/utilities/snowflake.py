@@ -1,9 +1,8 @@
-from abc import ABC, abstractmethod
 import logging
+from abc import ABC, abstractmethod
 
 try:
     from snowflake.snowpark import Session
-    from snowflake.snowpark.exceptions import SnowparkSessionException
 except ImportError:
     raise ImportError(
         "`snowflake-snowpark-python` package not found, please install it with "
@@ -14,13 +13,20 @@ from langchain_core.pydantic_v1 import SecretStr
 
 logger = logging.getLogger(__name__)
 
+
 class SnowflakeConnector(ABC):
     """
-        Abstract base class for Snowflake connector.
+    Abstract base class for Snowflake connector.
     """
+
     def __init__(
-        self, account: str, role: str, user: str, database: str, schema: str, 
-        warehouse: str
+        self,
+        account: str,
+        role: str,
+        user: str,
+        database: str,
+        schema: str,
+        warehouse: str,
     ):
         self._account = account
         self._role = role
@@ -30,9 +36,9 @@ class SnowflakeConnector(ABC):
         self._warehouse = warehouse
         self._session = None
         super().__init__()
-    
-    def set_snowflake_logger_params(self, level: int, handler: logging.Handler, 
-        formatter: logging.Formatter
+
+    def set_snowflake_logger_params(
+        self, level: int, handler: logging.Handler, formatter: logging.Formatter
     ) -> None:
         """Set the logger level for the Snowflake logger.
 
@@ -41,8 +47,8 @@ class SnowflakeConnector(ABC):
         .. code-block:: python
 
             self.set_snowflake_logger_params(
-                level=logging.INFO, 
-                handler=logging.StreamHandler(), 
+                level=logging.INFO,
+                handler=logging.StreamHandler(),
                 formatter=logging.Formatter(
                     "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
                 )
@@ -77,26 +83,47 @@ class SnowflakeConnectorBasic(SnowflakeConnector):
         .. code-block:: python
 
             from langchain_core.utils import (
-                get_from_dict_or_env, 
+                get_from_dict_or_env,
                 convert_to_secret_str
             )
             from langchain_community.utilities.snowflake import SnowflakeConnectorBasic
-            
+
             connector = SnowflakeConnectorBasic(
-                account=get_from_dict_or_env({}, "snowflake_account", "SNOWFLAKE_ACCOUNT"), 
-                role=get_from_dict_or_env({}, "snowflake_role", "SNOWFLAKE_ROLE"), 
-                user=get_from_dict_or_env({}, "snowflake_user", "SNOWFLAKE_USER"), 
+                account=get_from_dict_or_env(
+                    {}, "snowflake_account", "SNOWFLAKE_ACCOUNT"
+                ),
+                role=get_from_dict_or_env(
+                    {}, "snowflake_role", "SNOWFLAKE_ROLE"
+                ),
+                user=get_from_dict_or_env(
+                    {}, "snowflake_user", "SNOWFLAKE_USER"
+                ),
                 password=convert_to_secret_str(
-                    get_from_dict_or_env({}, "snowflake_password", "SNOWFLAKE_PASSWORD")
-                ), 
-                database=get_from_dict_or_env({}, "snowflake_database", "SNOWFLAKE_DATABASE"), 
-                schema=get_from_dict_or_env({}, "snowflake_schema", "SNOWFLAKE_SCHEMA"), 
-                warehouse=get_from_dict_or_env({}, "snowflake_warehouse", "SNOWFLAKE_WAREHOUSE")
+                    get_from_dict_or_env(
+                        {}, "snowflake_password", "SNOWFLAKE_PASSWORD
+                    )
+                ),
+                database=get_from_dict_or_env(
+                    {}, "snowflake_database", "SNOWFLAKE_DATABASE"
+                ),
+                schema=get_from_dict_or_env(
+                    {}, "snowflake_schema", "SNOWFLAKE_SCHEMA"
+                ),
+                warehouse=get_from_dict_or_env(
+                    {}, "snowflake_warehouse", "SNOWFLAKE_WAREHOUSE"
+                )
             )
     """
+
     def __init__(
-        self, account: str, role: str, user: str, password: SecretStr, database: str, 
-        schema: str, warehouse: str
+        self,
+        account: str,
+        role: str,
+        user: str,
+        password: SecretStr,
+        database: str,
+        schema: str,
+        warehouse: str,
     ):
         """Initialize Snowflake connector.
 
@@ -120,13 +147,13 @@ class SnowflakeConnectorBasic(SnowflakeConnector):
         """
         logger.debug(f"Using {__class__}")
         connection_params = {
-            "account": self._account, 
-            "role": self._role, 
-            "user": self._user, 
-            "password": self._password.get_secret_value(), 
-            "database": self._database, 
-            "schema": self._schema, 
-            "warehouse": self._warehouse
+            "account": self._account,
+            "role": self._role,
+            "user": self._user,
+            "password": self._password.get_secret_value(),
+            "database": self._database,
+            "schema": self._schema,
+            "warehouse": self._warehouse,
         }
         try:
             self._session = Session.builder.configs(connection_params).create()
