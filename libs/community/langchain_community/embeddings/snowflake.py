@@ -133,6 +133,9 @@ class SnowflakeEmbeddings(BaseModel, Embeddings):
         return result
 
     def _get_embeddings(self, input: List[str]) -> List[List[float]]:
+        """Pass-through function to get embeddings for a list of strings,
+        utilizing the progress bar if requested and TQDM can be imported.
+        """
         if self.show_progress:
             try:
                 from tqdm import tqdm
@@ -140,8 +143,8 @@ class SnowflakeEmbeddings(BaseModel, Embeddings):
                 iter_ = tqdm(input, desc="SnowflakeEmbeddings")
             except ImportError:
                 logger.warning(
-                    "Unable to show progress bar because tqdm could not be imported."
-                    "Please install with `pip install tqdm`."
+                    "Cannot show progress bar as `tqdm` could not be imported."
+                    "Please install tqdm with `pip install tqdm`."
                 )
                 iter_ = input
         else:
@@ -175,6 +178,17 @@ class SnowflakeEmbeddings(BaseModel, Embeddings):
             logger.error(error)
             raise error
 
+    async def aembed_documents(self, texts: List[str]) -> List[List[float]]:
+        """Asynchronous Embed documents.
+
+        Args:
+            texts: The list of texts to embed.
+
+        Returns:
+            List of lists of floats as embeddings of the input.
+        """
+        raise NotImplementedError("Not implemented")
+
     def embed_query(self, input: str) -> List[float]:
         """Produce embeddings for a string, using Snowflake's embedding model.
 
@@ -197,3 +211,14 @@ class SnowflakeEmbeddings(BaseModel, Embeddings):
             logger.error("Error producing Snowflake embeddings")
             logger.error(error)
             raise error
+
+    async def aembed_query(self, text: str) -> List[float]:
+        """Asynchronous Embed query text.
+
+        Args:
+            text: The text to embed.
+
+        Returns:
+            List of floats as embeddings of the input.
+        """
+        raise NotImplementedError("Not implemented")
