@@ -1,4 +1,4 @@
-"""Test Snowflake vectorstore functionality."""
+"""Unit tests for Snowflake vectorstore."""
 
 from typing import Iterator, List
 

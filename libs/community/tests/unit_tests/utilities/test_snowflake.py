@@ -1,4 +1,4 @@
-"""Integration tests for Snowflake."""
+"""Unit tests for Snowflake connector."""
 
 from typing import Iterator
 

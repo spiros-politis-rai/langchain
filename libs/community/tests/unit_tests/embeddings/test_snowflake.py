@@ -1,3 +1,5 @@
+"""Unit tests for Snowflake embeddings."""
+
 from typing import Iterator
 
 import pytest
